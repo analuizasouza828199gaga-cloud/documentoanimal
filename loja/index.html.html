@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="RGA – Registro Geral Animal: documento oficial de identificação do seu pet. Saiba tudo sobre o RGA, seus benefícios e como funciona.">
+<meta name="robots" content="index, follow">
+<title>RGA – Registro Geral Animal | Documento de Identificação Pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2e4a;
+    --blue: #2563a8;
+    --sky: #e8f2fb;
+    --teal: #1d8c72;
+    --teal-light: #e6f5f1;
+    --sand: #f7f4ef;
+    --warm-white: #fdfcfa;
+    --text: #2d3748;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --gold: #c9a84c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: var(--text);
+    background: var(--warm-white);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--navy);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-icon svg { width: 24px; height: 24px; }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .logo-text strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .logo-text span {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  nav {
+    display: flex;
+    gap: 28px;
+  }
+  nav a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--navy); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #2a4a70 60%, #1d6a5a 100%);
+    padding: 80px 24px 90px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.88);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.18;
+    margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: #7ecfc0;
+  }
+  .hero p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.78);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    font-weight: 300;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #7ecfc0;
+    display: block;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.02em;
+  }
+
+  /* SECTIONS */
+  .section { padding: 72px 24px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-light);
+    max-width: 580px;
+    font-weight: 300;
+  }
+  .section-head { margin-bottom: 48px; }
+
+  /* O QUE É O RGA */
+  .what-is {
+    background: #fff;
+  }
+  .what-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .what-visual {
+    background: var(--sky);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #d4e5f7;
+  }
+  .doc-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+  }
+  .doc-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  .doc-card-icon.blue { background: var(--sky); }
+  .doc-card-icon.green { background: var(--teal-light); }
+  .doc-card-icon.gold { background: #fdf5e0; }
+  .doc-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 3px;
+  }
+  .doc-card p { font-size: 13px; color: var(--text-light); }
+
+  .what-content p {
+    color: var(--text);
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .highlight-box {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 22px;
+    margin-top: 24px;
+  }
+  .highlight-box p {
+    font-size: 15px;
+    color: #0f5c4a;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* BENEFÍCIOS */
+  .benefits { background: var(--sand); }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .benefit-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 26px;
+    border: 1px solid var(--border);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .benefit-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  }
+  .benefit-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--sky);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+  .benefit-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .benefit-card p {
+    font-size: 14.5px;
+    color: var(--text-light);
+    line-height: 1.65;
+  }
+
+  /* COMO FUNCIONA */
+  .how { background: #fff; }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--blue));
+    z-index: 0;
+  }
+  .step {
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-num {
+    width: 60px;
+    height: 60px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 2px var(--navy);
+  }
+  .step h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 13.5px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* INFORMAÇÕES LEGAIS */
+  .legal { background: var(--sky); }
+  .legal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .legal-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #c9dff5;
+  }
+  .legal-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .legal-card h3 span {
+    font-size: 20px;
+  }
+  .legal-card p {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .legal-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .legal-card ul li {
+    font-size: 14px;
+    color: var(--text);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .legal-card ul li::before {
+    content: '✓';
+    color: var(--teal);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* FAQ */
+  .faq { background: var(--warm-white); }
+  .faq-list {
+    max-width: 780px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .faq-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: left;
+    gap: 16px;
+  }
+  .faq-q .arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--sky);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s, background 0.3s;
+    font-size: 14px;
+    color: var(--blue);
+  }
+  .faq-item.open .arrow {
+    transform: rotate(180deg);
+    background: var(--blue);
+    color: #fff;
+  }
+  .faq-a {
+    display: none;
+    padding: 0 24px 20px;
+    font-size: 14.5px;
+    color: var(--text-light);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    margin: 0 24px;
+    padding-top: 16px;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* DADOS DO DOCUMENTO */
+  .doc-data { background: var(--sand); }
+  .doc-data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .data-point {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px;
+    border: 1px solid var(--border);
+  }
+  .data-point label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .data-point strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .data-point span {
+    font-size: 13.5px;
+    color: var(--text-light);
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* AVISO */
+  .notice-bar {
+    background: #fff8e6;
+    border-top: 3px solid var(--gold);
+    padding: 20px 24px;
+  }
+  .notice-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 13.5px;
+    color: #7a5c00;
+    line-height: 1.6;
+  }
+  .notice-inner svg { flex-shrink: 0; margin-top: 2px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    padding: 56px 24px 28px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 32px;
+  }
+  .footer-brand p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-top: 14px;
+    max-width: 340px;
+  }
+  .footer-brand .logo-text strong { color: #fff; }
+  .footer-brand .logo-text span { color: rgba(255,255,255,0.45); }
+  .footer-brand .logo-icon { background: rgba(255,255,255,0.1); }
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li { font-size: 14px; }
+  .footer-col ul li a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: #fff; }
+  .footer-col .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 12px;
+  }
+  .footer-col .contact-item label {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+  .footer-col .contact-item span {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+  }
+  .footer-legal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .footer-legal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-legal p {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+  }
+  .footer-legal .cnpj-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    white-space: nowrap;
+  }
+  .footer-legal .cnpj-badge strong { color: rgba(255,255,255,0.85); }
+
+  .divider { width: 48px; height: 3px; background: var(--gold); border-radius: 2px; margin-bottom: 24px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .what-grid { grid-template-columns: 1fr; }
+    .benefits-grid { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .steps::before { display: none; }
+    .legal-grid { grid-template-columns: 1fr; }
+    .doc-data-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 32px; }
+    nav { display: none; }
+  }
+  @media (max-width: 600px) {
+    .benefits-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .doc-data-grid { grid-template-columns: 1fr; }
+    .hero { padding: 56px 20px 64px; }
+    .hero-stats { gap: 24px; }
+    .section { padding: 52px 20px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-inner > * {
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-inner > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-inner > *:nth-child(2) { animation-delay: 0.22s; }
+  .hero-inner > *:nth-child(3) { animation-delay: 0.34s; }
+  .hero-stats { animation: fadeUp 0.7s 0.48s ease both; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+          <line x1="9" y1="9" x2="9.01" y2="9"/>
+          <line x1="15" y1="9" x2="15.01" y2="9"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <strong>Documento Animal RGA</strong>
+        <span>Registro Geral Animal</span>
+      </div>
+    </a>
+    <nav>
+      <a href="#o-que-e">O que é</a>
+      <a href="#beneficios">Benefícios</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
+      Documento Oficial para Animais
+    </div>
+    <h1>RGA – <em>Registro Geral Animal</em><br>A identidade do seu pet</h1>
+    <p>O RGA é o documento de identificação do seu animal de estimação, reunindo informações essenciais de saúde, rastreabilidade e vínculo com o tutor em um único registro.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">RGA</span>
+        <span class="stat-label">Registro Geral Animal</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Dados do animal</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">1 doc</span>
+        <span class="stat-label">Todas as informações</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">Digital</span>
+        <span class="stat-label">Acessível e prático</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE É O RGA -->
+<section class="section what-is" id="o-que-e">
+  <div class="section-inner">
+    <div class="what-grid">
+      <div class="what-content">
+        <div class="section-tag">Sobre o documento</div>
+        <div class="divider"></div>
+        <h2 class="section-title">O que é o RGA?</h2>
+        <p>O <strong>RGA – Registro Geral Animal</strong> é um documento de identificação criado para animais de estimação, especialmente cães e gatos. Funciona como um "RG do pet", reunindo em um único registro as principais informações sobre o animal: dados de identificação, histórico de saúde, vínculo com o tutor e, quando aplicável, informações sobre microchip.</p>
+        <p>Com o avanço das políticas públicas de bem-estar animal no Brasil, o RGA ganhou relevância como ferramenta de rastreabilidade e proteção. Ele facilita a identificação do animal em caso de perda, auxilia em procedimentos veterinários e contribui para o controle responsável de animais domésticos.</p>
+        <p>O documento é geralmente emitido por entidades especializadas, canis registrados, clínicas veterinárias, prefeituras ou órgãos de proteção animal, dependendo da região e da legislação municipal vigente.</p>
+        <div class="highlight-box">
+          <p>📋 O RGA não substitui documentos obrigatórios como a carteira de vacinação, mas pode complementá-los ao reunir informações completas sobre a vida do animal.</p>
+        </div>
+      </div>
+      <div class="what-visual">
+        <div class="doc-card">
+          <div class="doc-card-icon blue">🐾</div>
+          <div>
+            <h4>Identificação do animal</h4>
+            <p>Nome, espécie, raça, sexo, data de nascimento e características físicas para identificação precisa.</p>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-card-icon green">💉</div>
+          <div>
+            <h4>Histórico de saúde</h4>
+            <p>Registro de vacinas aplicadas, vermifugações, cirurgias e acompanhamento veterinário.</p>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-card-icon gold">📡</div>
+          <div>
+            <h4>Microchip (quando houver)</h4>
+            <p>Número do chip de identificação eletrônica, facilitando a localização em caso de perda ou roubo.</p>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-card-icon blue">👤</div>
+          <div>
+            <h4>Dados do tutor</h4>
+            <p>Informações de contato do responsável pelo animal para comunicação rápida em situações de emergência.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFÍCIOS -->
+<section class="section benefits" id="beneficios">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-tag">Por que ter o RGA</div>
+      <div class="divider"></div>
+      <h2 class="section-title">Benefícios do Registro Geral Animal</h2>
+      <p class="section-sub">O RGA traz mais segurança, praticidade e responsabilidade para quem cuida de animais de estimação.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🔍</div>
+        <h3>Facilita a identificação</h3>
+        <p>Em caso de perda ou fuga, o RGA permite que qualquer pessoa que encontre o animal identifique rapidamente o tutor responsável e entre em contato para devolvê-lo.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🏥</div>
+        <h3>Apoio veterinário</h3>
+        <p>Médicos veterinários podem consultar o histórico de saúde do animal de forma ágil, tomando decisões mais seguras e precisas durante consultas e emergências.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">⚖️</div>
+        <h3>Comprovação de tutela</h3>
+        <p>O documento comprova o vínculo legal entre o animal e seu responsável, auxiliando em situações administrativas, jurídicas ou de disputa de guarda.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🌍</div>
+        <h3>Bem-estar e responsabilidade</h3>
+        <p>Incentivar o registro contribui para uma cultura de responsabilidade animal, reduzindo abandono e promovendo cuidados adequados para todos os pets.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📱</div>
+        <h3>Praticidade digital</h3>
+        <p>Versões digitais do RGA permitem acesso às informações do animal pelo celular a qualquer momento, sem depender de documentos físicos.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🛡️</div>
+        <h3>Proteção contra extravios</h3>
+        <p>Com os dados de microchip integrados ao registro, é possível rastrear o animal com o apoio de clínicas veterinárias e abrigos conveniados ao sistema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section how" id="como-funciona">
+  <div class="section-inner">
+    <div class="section-head" style="text-align:center">
+      <div class="section-tag" style="text-align:center">Passo a passo</div>
+      <div class="divider" style="margin:0 auto 24px"></div>
+      <h2 class="section-title" style="text-align:center">Como funciona o RGA</h2>
+      <p class="section-sub" style="margin:0 auto">Entenda o processo de obtenção e manutenção do Registro Geral Animal.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Coleta de informações</h4>
+        <p>São reunidos os dados do animal (nome, raça, sexo, cor, data de nascimento) e as informações do tutor responsável.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Registro e emissão</h4>
+        <p>O documento é gerado por entidade habilitada — clínica veterinária, canil registrado ou órgão municipal responsável.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Inclusão de microchip</h4>
+        <p>Quando disponível, o número do chip de identificação eletrônica é vinculado ao registro para facilitar a rastreabilidade.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Atualização contínua</h4>
+        <p>O RGA deve ser atualizado sempre que houver mudanças significativas: novos dados de saúde, mudança de tutor ou atualização de informações.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFORMAÇÕES LEGAIS -->
+<section class="section legal">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-tag">Marco legal e contexto</div>
+      <div class="divider"></div>
+      <h2 class="section-title">Legislação e bem-estar animal</h2>
+      <p class="section-sub">O Brasil avançou muito na proteção dos animais. Conheça o contexto legal que sustenta a importância do RGA.</p>
+    </div>
+    <div class="legal-grid">
+      <div class="legal-card">
+        <h3><span>📜</span> Lei Federal 9.605/1998</h3>
+        <p>A Lei de Crimes Ambientais tornou a maus-tratos a animais infração penal no Brasil, elevando a proteção dos animais ao patamar legislativo e criando a base para políticas de bem-estar animal em todo o território nacional.</p>
+      </div>
+      <div class="legal-card">
+        <h3><span>🏙️</span> Legislações municipais</h3>
+        <p>Diversos municípios brasileiros adotaram regulamentações específicas sobre registro, identificação e controle de animais domésticos. Consulte a legislação da sua cidade para entender as obrigações locais sobre o RGA.</p>
+      </div>
+      <div class="legal-card">
+        <h3><span>📋</span> O que o RGA pode conter</h3>
+        <ul>
+          <li>Dados de identificação completa do animal</li>
+          <li>Informações sobre raça, porte e pelagem</li>
+          <li>Histórico de vacinação e saúde</li>
+          <li>Número de microchip (quando implantado)</li>
+          <li>Nome, CPF e contato do tutor</li>
+          <li>Data de emissão e órgão responsável</li>
+        </ul>
+      </div>
+      <div class="legal-card">
+        <h3><span>🤝</span> Responsabilidade do tutor</h3>
+        <p>Manter o registro atualizado é um ato de responsabilidade. O tutor deve garantir que as informações do RGA reflitam a situação atual do animal, especialmente em casos de mudança de endereço, transferência de tutela ou atualização do histórico veterinário.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DADOS DO DOCUMENTO (QUE O RGA CONTÉM) -->
+<section class="section doc-data">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-tag">Estrutura do documento</div>
+      <div class="divider"></div>
+      <h2 class="section-title">Informações presentes no RGA</h2>
+      <p class="section-sub">Cada campo do Registro Geral Animal tem uma finalidade específica de identificação e segurança.</p>
+    </div>
+    <div class="doc-data-grid">
+      <div class="data-point">
+        <label>Campo 01</label>
+        <strong>Nome do animal</strong>
+        <span>Identificação pessoal e afetiva do pet junto ao seu tutor.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 02</label>
+        <strong>Espécie e raça</strong>
+        <span>Cão, gato, coelho, ave, entre outros. Raça pura ou sem raça definida (SRD).</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 03</label>
+        <strong>Data de nascimento</strong>
+        <span>Ou data estimada de nascimento, quando não há certeza da data exata.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 04</label>
+        <strong>Características físicas</strong>
+        <span>Cor, porte, pelagem e marcas distintas que auxiliam na identificação visual.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 05</label>
+        <strong>Microchip</strong>
+        <span>Número do chip eletrônico implantado, quando o animal possui identificação eletrônica.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 06</label>
+        <strong>Histórico de saúde</strong>
+        <span>Vacinas, vermifugações, cirurgias e condições de saúde relevantes.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 07</label>
+        <strong>Dados do tutor</strong>
+        <span>Nome completo, CPF, endereço e telefone de contato do responsável.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 08</label>
+        <strong>Veterinário responsável</strong>
+        <span>Nome e CRMV do profissional que acompanha a saúde do animal.</span>
+      </div>
+      <div class="data-point">
+        <label>Campo 09</label>
+        <strong>Número do registro</strong>
+        <span>Código único que identifica o RGA perante o órgão emissor ou sistema de cadastro.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq" id="faq">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-tag">Dúvidas frequentes</div>
+      <div class="divider"></div>
+      <h2 class="section-title">Perguntas comuns sobre o RGA</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O RGA é obrigatório para todos os animais?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          A obrigatoriedade varia conforme a legislação de cada município. Em algumas cidades, o registro é incentivado ou exigido para determinadas raças ou situações. Independentemente da obrigação legal, o RGA é recomendado para todos os tutores como boa prática de responsabilidade animal.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Qual é a diferença entre o RGA e a carteira de vacinação?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          A carteira de vacinação é um documento veterinário que registra as vacinas aplicadas ao animal. O RGA é mais abrangente: inclui os dados de identificação, informações do tutor, número de microchip e histórico de saúde geral. Os dois documentos se complementam e podem coexistir.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Onde posso obter o RGA para o meu pet?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          O RGA pode ser emitido por clínicas veterinárias habilitadas, canis e gatis registrados, organizações de proteção animal, órgãos municipais responsáveis pelo controle de zoonoses ou plataformas especializadas em serviços para pets. A disponibilidade varia por região.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O RGA tem validade por tempo determinado?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          Em geral, o RGA não possui prazo de validade, mas deve ser atualizado sempre que houver mudanças relevantes: novos dados de saúde, mudança de tutor, atualização de endereço ou novas informações sobre microchip. A atualização periódica garante que o documento continue sendo útil.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O RGA serve para viagens com o animal?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          Para viagens nacionais e internacionais, os documentos exigidos variam. Em geral, são necessários atestados sanitários, carteiras de vacinação e, para viagens ao exterior, certificados específicos emitidos por médicos veterinários habilitados. O RGA pode ser um documento complementar útil, mas não substitui os documentos oficiais de trânsito animal.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O microchip é necessário para ter o RGA?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          Não. O microchip é um campo do RGA que é preenchido apenas quando o animal possui essa identificação eletrônica. Animais sem microchip também podem ter o RGA — o documento ainda assim registra os demais dados de identificação e saúde.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVISO INFORMATIVO -->
+<div class="notice-bar">
+  <div class="notice-inner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span><strong>Aviso informativo:</strong> Esta página tem caráter exclusivamente educativo e informativo sobre o Documento Animal RGA. As informações aqui apresentadas são de cunho geral e não substituem orientações de médicos veterinários ou de órgãos municipais competentes. Para informações específicas sobre a legislação de sua cidade, consulte os órgãos responsáveis de sua região.</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <strong>Documento Animal RGA</strong>
+            <span>Registro Geral Animal</span>
+          </div>
+        </a>
+        <p>Informações sobre o Registro Geral Animal — o documento de identificação e rastreabilidade do seu pet. Conteúdo educativo e informativo sobre bem-estar animal.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="#o-que-e">O que é o RGA</a></li>
+          <li><a href="#beneficios">Benefícios do documento</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="#faq">Dúvidas frequentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <div class="contact-item">
+          <label>Telefone</label>
+          <span>(13) 9193-8973</span>
+        </div>
+        <div class="contact-item">
+          <label>E-mail</label>
+          <span>f.rodriguez.f8@gmail.com</span>
+        </div>
+        <div class="contact-item">
+          <label>Localização</label>
+          <span>Vila Belmiro, Santos – SP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-legal">
+      <div class="footer-legal-row">
+        <div>
+          <p><strong style="color:rgba(255,255,255,0.6)">Dados empresariais</strong></p>
+          <p style="margin-top:6px">61.692.530 Fernanda Rodriguez Fernandes &nbsp;|&nbsp; Empresário Individual &nbsp;|&nbsp; Porte ME</p>
+          <p>Rua Vl. Maria de Lourdes, 15 – Vila Belmiro, Santos/SP, CEP 11.075-325</p>
+          <p>Atividade principal: Fornecimento de alimentos preparados preponderantemente para consumo domiciliar (CNAE 56.20-1-04)</p>
+          <p>Data de abertura: 10 de julho de 2025 &nbsp;|&nbsp; Situação cadastral: <span style="color:#7ecfc0;font-weight:600">Ativa</span></p>
+        </div>
+        <div class="cnpj-badge">
+          CNPJ &nbsp;<strong>61.692.530/0001-32</strong>
+        </div>
+      </div>
+      <div class="footer-legal-row" style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07)">
+        <p>© 2025 Documento Animal RGA. Todos os direitos reservados. Conteúdo de caráter informativo e educativo.</p>
+        <p style="text-align:right">Política de Privacidade &nbsp;|&nbsp; Termos de Uso</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.benefit-card, .step, .doc-card, .data-point, .legal-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
