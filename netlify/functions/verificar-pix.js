@@ -6,6 +6,7 @@ exports.handler = async function (event) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           success: false,
+          pago: false,
           message: "Método não permitido. Use GET."
         })
       };
@@ -39,7 +40,7 @@ exports.handler = async function (event) {
       };
     }
 
-    const url = `https://api.blackcatpay.com.br/api/sales/${encodeURIComponent(transactionId)}`;
+    const url = `https://api.blackcatpay.com.br/api/sales/${encodeURIComponent(transactionId)}/status`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -51,7 +52,7 @@ exports.handler = async function (event) {
 
     const rawResponse = await response.text();
 
-    let data;
+    let data = {};
     try {
       data = rawResponse ? JSON.parse(rawResponse) : {};
     } catch (e) {
@@ -67,33 +68,21 @@ exports.handler = async function (event) {
       };
     }
 
-    const status =
-      data?.data?.status ||
-      data?.status ||
-      data?.data?.sale?.status ||
-      "";
+    const status = data?.data?.status || "";
+    const statusNormalizado = String(status).toUpperCase();
 
-    const statusNormalizado = String(status).toLowerCase();
-
-    const pago = [
-      "paid",
-      "approved",
-      "completed",
-      "confirmed",
-      "success",
-      "succeeded",
-      "pago",
-      "aprovado"
-    ].includes(statusNormalizado);
+    const pago = statusNormalizado === "PAID";
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        success: true,
+        success: data?.success === true,
         pago: pago,
         status: status,
-        transaction_id: transactionId,
+        transaction_id: data?.data?.transactionId || transactionId,
+        paid_at: data?.data?.paidAt || null,
+        amount: data?.data?.amount || null,
         api_response: data
       })
     };
