@@ -1114,7 +1114,7 @@ async function gerarPix() {
   try {
     status.textContent = "Gerando pagamento...";
 
-    const resp = await fetch("/api/api-pix.php", {
+    const resp = await fetch("/.netlify/functions/api-pix", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1202,7 +1202,7 @@ async function verificarPagamento() {
 
   try {
     const resp = await fetch(
-      "/api/verificar-pix.php?transactionId=" + encodeURIComponent(window.pixTransactionId)
+      "/.netlify/functions/verificar-pix?transactionId=" + encodeURIComponent(window.pixTransactionId))
     );
 
     const data = await resp.json();
