@@ -1,1 +1,1336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro Geral do Animal (RGA) - Solicitar identidade do animal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #333; background: #fff; }
+  
+  .breadcrumb { font-size: 13px; padding: 10px 20px; }
+  .breadcrumb a { color: #333; text-decoration: underline; }
+  .breadcrumb span { font-weight: bold; }
+  
+  h1 { font-size: 22px; font-weight: 400; padding: 10px 20px 5px; }
+
+  /* Progress Steps */
+  .steps { display: flex; width: 100%; margin-bottom: 20px; }
+  .step { flex: 1; padding: 12px 20px; text-align: center; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; position: relative; }
+  .step.active { background: #FFD700; color: #000; }
+  .step.inactive { background: #ddd; color: #888; }
+  .step::after {
+  display: none;
+}
+  /* Form */
+  .form-container { padding: 10px 20px 30px; max-width: 1500px; }
+  .section-box { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; }
+  .section-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; }
+  .required-note { color: #c00; font-style: italic; font-size: 13px; margin-bottom: 15px; }
+
+  .field-group { margin-bottom: 8px; }
+  .field-group label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #555; text-transform: uppercase; padding: 8px 10px 0; background: #f0f0f0; }
+  .field-group input, .field-group select {
+    width: 100%; padding: 8px 10px 10px; border: none; border-bottom: 1px solid #ccc;
+    background: #f0f0f0; font-size: 14px; color: #333; outline: none;
+  }
+  .field-group select { color: #c00; }
+  .field-group input::placeholder { color: #aaa; }
+  .field-group input:focus, .field-group select:focus { border-bottom: 2px solid #FFD700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .file-upload-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .file-upload-row label.upload-btn { 
+    background: #f0f0f0; border: 1px solid #999; padding: 4px 10px; font-size: 13px; cursor: pointer; white-space: nowrap;
+  }
+  .file-upload-row span.no-file { color: #c00; font-size: 13px; }
+  .file-upload-row span.file-desc { font-size: 13px; color: #333; }
+  .file-upload-row input[type=file] { display: none; }
+
+  /* Terms */
+  .terms-box { border: 1px solid #ddd; padding: 15px 20px; margin: 10px 0 20px; }
+  .terms-box .term-item { margin-bottom: 15px; }
+  .terms-box .term-item p { font-weight: bold; font-size: 14px; margin-bottom: 6px; }
+  .terms-box .term-item label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+  .terms-box .term-item input[type=checkbox] { width: 16px; height: 16px; }
+
+  .reminder { color: #c00; font-weight: bold; font-size: 15px; padding: 10px 0 5px; }
+
+  /* Navigation */
+  .nav-buttons { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+  .btn-back { background: none; border: none; color: #333; font-size: 14px; cursor: pointer; text-decoration: underline; }
+  .btn-back::before { content: '‹ '; }
+  .btn-continue { background: #FFD700; border: none; padding: 12px 30px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-continue::after { content: ' ›'; }
+
+  /* Praça Select com cards */
+  .praca-select-wrapper { margin-top: 8px; }
+  .praca-loading { color: #888; font-size: 13px; font-style: italic; padding: 8px 10px; background: #f0f0f0; display: none; }
+  .praca-cards { display: none; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .praca-card {
+    border: 2px solid #ddd; padding: 12px 14px; cursor: pointer; background: #fafafa;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .praca-card:hover { border-color: #FFD700; background: #fffde7; }
+  .praca-card.selected { border-color: #FFD700; background: #fffde7; }
+  .praca-card input[type=radio] { display: none; }
+  .praca-card-name { font-weight: bold; font-size: 14px; color: #222; }
+  .praca-card-zona { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .praca-card-end { font-size: 13px; color: #444; margin-top: 2px; }
+  .praca-card-horario { font-size: 12px; color: #666; margin-top: 4px; }
+  .praca-card-dist { font-size: 12px; color: #0070c0; font-weight: 600; margin-top: 4px; }
+  .praca-hint { font-size: 13px; color: #555; padding: 8px 10px; background: #f0f0f0; }
+  .praca-fallback { display: none; }
+
+  /* CAPTCHA PAGE */
+  .captcha-section { padding: 30px 20px; max-width: 500px; margin: 0 auto; text-align: center; }
+  .captcha-section h2 { font-size: 18px; margin-bottom: 20px; }
+  .captcha-box { background: #f9f9f9; border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; }
+  .captcha-display { font-size: 32px; font-weight: bold; letter-spacing: 10px; background: #e0e0e0; padding: 10px 20px; display: inline-block; margin-bottom: 15px; user-select: none; font-family: 'Courier New', monospace; color: #333; border: 2px dashed #999; }
+  .captcha-input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; margin-bottom: 10px; text-align: center; letter-spacing: 5px; }
+  .captcha-refresh { background: none; border: 1px solid #999; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+  .captcha-error { color: #c00; font-size: 13px; margin-top: 5px; display: none; }
+
+  /* CONFIRMATION PAGE */
+  .confirmation-section { padding: 20px; max-width: 700px; margin: 0 auto; }
+  .confirmation-section h2 { font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #2a6e00; }
+  .confirmation-box { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; }
+  .confirmation-box p { margin-bottom: 8px; font-size: 14px; }
+  .confirmation-box .label { font-weight: bold; }
+  .payment-section { border: 2px solid #FFD700; padding: 20px; margin-bottom: 20px; background: #fffde7; }
+  .payment-section h3 { font-size: 16px; font-weight: bold; margin-bottom: 10px; }
+  .payment-amount { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 15px; }
+  .qrcode-area { border: 2px dashed #999; padding: 20px; text-align: center; margin-bottom: 15px; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; }
+  .qrcode-area p { color: #888; font-size: 13px; margin-bottom: 10px; }
+  .qrcode-placeholder { width: 160px; height: 160px; background: #f0f0f0; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #aaa; }
+  .copypaste-area { margin-top: 10px; }
+  .copypaste-area label { font-size: 13px; font-weight: bold; display: block; margin-bottom: 4px; }
+  .copypaste-row { display: flex; gap: 6px; }
+  .copypaste-row input { flex: 1; padding: 8px; border: 1px solid #ccc; font-size: 12px; background: #f9f9f9; }
+  .copypaste-row button { padding: 8px 14px; background: #FFD700; border: none; font-size: 13px; font-weight: bold; cursor: pointer; }
+  .success-msg { display: none; color: green; font-size: 12px; margin-top: 4px; }
+
+  /* PAGE VISIBILITY */
+  .page { display: none; }
+  .page.active { display: block; }
+  /* ===== CORREÇÃO MOBILE / EVITAR ESPAÇO BRANCO LATERAL ===== */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.form-container,
+.confirmation-section,
+.captcha-section {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.section-box,
+.terms-box,
+.confirmation-box,
+.payment-section,
+.captcha-box {
+  width: 100%;
+  max-width: 100%;
+}
+
+input,
+select,
+button,
+textarea {
+  max-width: 100%;
+}
+
+.breadcrumb {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.steps {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.step {
+  min-width: 0;
+}
+
+/* remove as setas dos steps no celular para não estourar a tela */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 19px;
+    line-height: 1.3;
+    padding: 14px 12px 6px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    padding: 10px 12px;
+    line-height: 1.5;
+  }
+
+  .form-container {
+    padding: 10px 12px 28px;
+  }
+
+  .section-box {
+    padding: 14px 12px;
+  }
+
+  .section-title {
+    font-size: 15px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    padding: 0 12px;
+    margin-bottom: 18px;
+  }
+
+  .step {
+    padding: 10px 6px;
+    font-size: 11px;
+    text-align: center;
+    position: static;
+  }
+
+  .step::after,
+  .step.active::after,
+  .step.inactive::after {
+    display: none !important;
+  }
+
+  .two-col,
+  .three-col {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .field-group label {
+    font-size: 10px;
+    line-height: 1.3;
+    padding: 8px 9px 0;
+  }
+
+  .field-group input,
+  .field-group select {
+    font-size: 14px;
+    padding: 8px 9px 10px;
+  }
+
+  .file-upload-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .file-upload-row label.upload-btn {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .file-upload-row span.file-desc,
+  .file-upload-row span.no-file {
+    max-width: 100%;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .terms-box {
+    padding: 14px 12px;
+  }
+
+  .terms-box .term-item p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .btn-back,
+  .btn-continue {
+    width: 100%;
+    text-align: center;
+  }
+
+  .praca-card {
+    padding: 12px;
+  }
+
+  .praca-card-end,
+  .praca-card-horario,
+  .praca-card-dist {
+    line-height: 1.4;
+  }
+
+  .captcha-section {
+    padding: 24px 12px;
+  }
+
+  .captcha-display {
+    max-width: 100%;
+    font-size: 24px;
+    letter-spacing: 6px;
+    padding: 10px 12px;
+    overflow: hidden;
+  }
+
+  .captcha-input {
+    font-size: 15px;
+    letter-spacing: 3px;
+  }
+
+  .confirmation-section {
+    padding: 16px 12px;
+  }
+
+  .payment-section {
+    padding: 16px 12px;
+  }
+
+  .payment-amount {
+    font-size: 20px;
+  }
+
+  .qrcode-area {
+    min-height: 180px;
+    padding: 16px 10px;
+  }
+
+  .qrcode-placeholder {
+    width: 145px;
+    height: 145px;
+  }
+
+  .copypaste-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .copypaste-row input,
+  .copypaste-row button {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: SOLICITATION FORM -->
+<div id="page-form" class="page active">
+  <h1>Registro Geral do Animal (RGA) - Solicitar identidade do animal</h1>
+  <div class="breadcrumb">
+    <strong>Caminho:</strong> <a href="#">Início</a> ›› <a href="#">Animais</a> ›› <a href="#">Registro de animais - RGA</a> ›› <a href="#">Registro Geral do Animal (RGA) - Solicitar identidade do animal</a>
+  </div>
+
+  <div class="steps">
+    <div class="step inactive">INFORMAÇÃO</div>
+    <div class="step active">SOLICITAÇÃO</div>
+    <div class="step inactive">ARQUIVOS/CAPTCHA</div>
+    <div class="step inactive">CONFIRMAÇÃO</div>
+  </div>
+
+  <div class="form-container">
+    <div class="section-box">
+      <div class="section-title">Campos específicos</div>
+      <div class="required-note">Os campos indicados com asterisco (*) são de preenchimento obrigatório.</div>
+
+      <!-- TUTOR INFO -->
+      <div class="section-title">Informações do Tutor (Responsável pelo animal)</div>
+
+      <div class="field-group">
+        <label>NOME COMPLETO *</label>
+        <input type="text" id="nome" placeholder="">
+      </div>
+      <div class="field-group">
+        <label>E-MAIL *</label>
+        <input type="email" id="email" placeholder="acao@provedor.com.br">
+      </div>
+      <div class="field-group">
+        <label>CPF *</label>
+        <input type="text" id="cpf" placeholder="000.000.000-00">
+      </div>
+      <div class="field-group">
+        <label>VOCÊ TEM 18 ANOS OU MAIS? *</label>
+        <select id="maior18">
+          <option value="">Selecione...</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>CELULAR *</label>
+        <input type="text" id="celular" placeholder="00000-0000">
+      </div>
+      <div class="field-group">
+        <label>TELEFONE RESIDENCIAL</label>
+        <input type="text" id="telefone" placeholder="">
+      </div>
+
+      <!-- DOC UPLOAD -->
+      <div style="margin: 15px 0 5px; font-weight: bold;">Documento de identificação oficial com CPF e foto</div>
+      <div class="file-upload-row">
+        <label class="upload-btn" for="doc-id">Escolher arquivo</label>
+        <input type="file" id="doc-id" onchange="updateFileName(this, 'doc-id-name')">
+        <span class="no-file" id="doc-id-name">Nenhum arquivo escolhido</span>
+      </div>
+
+      <!-- ADDRESS -->
+      <div style="margin: 15px 0 5px; font-weight: bold;">Endereço residencial completo</div>
+      <div class="field-group">
+        <label>CEP *
+          <span id="cep-loading" style="display:none; font-weight:normal; color:#888; font-size:11px;">⏳ Buscando...</span>
+          <span id="cep-ok" style="display:none; font-weight:normal; color:green; font-size:11px;">✔ Endereço encontrado</span>
+          <span id="cep-error" style="display:none; font-weight:normal; color:#c00; font-size:11px;">✖ CEP não encontrado</span>
+        </label>
+        <input type="text" id="cep" placeholder="00000-000" maxlength="9" oninput="formatCEP(this)" onblur="buscarCEP(this.value)">
+      </div>
+      <div class="field-group">
+        <label>LOGRADOURO (EXEMPLO: RUA, AVENIDA) *</label>
+        <input type="text" id="logradouro">
+      </div>
+      <div class="two-col">
+        <div class="field-group">
+          <label>NÚMERO *</label>
+          <input type="text" id="numero">
+        </div>
+        <div class="field-group">
+          <label>COMPLEMENTO</label>
+          <input type="text" id="complemento">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>BAIRRO *</label>
+        <input type="text" id="bairro">
+      </div>
+      <div class="two-col">
+        <div class="field-group">
+          <label>CIDADE *</label>
+          <input type="text" id="cidade">
+        </div>
+        <div class="field-group">
+          <label>ESTADO *</label>
+          <input type="text" id="estado">
+        </div>
+      </div>
+
+      <!-- ADDRESS PROOF -->
+      <div class="file-upload-row" style="margin-top:10px;">
+        <label class="upload-btn" for="comp-end">Escolher arquivo</label>
+        <input type="file" id="comp-end" onchange="updateFileName(this, 'comp-end-name')">
+        <span class="no-file" id="comp-end-name">Nenhum arquivo escolhido</span>
+        <span class="file-desc">Comprovante de endereço</span>
+      </div>
+
+      <!-- ANIMAL INFO -->
+      <div class="section-title" style="margin-top:20px;">Informações do animal</div>
+
+      <div class="field-group">
+        <label>VOCÊ PRETENDE SOLICITAR A CASTRAÇÃO DO ANIMAL QUE ESTÁ REGISTRANDO NESTA SOLICITAÇÃO? *</label>
+        <select id="castracao">
+          <option value="">Selecione...</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>ANIMAIS CADASTRADOS PARA CPF INFORMADO</label>
+        <select id="animais-cad">
+          <option value="">Selecione...</option>
+          <option>Primeiro Cadastro</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>ESPÉCIE DO ANIMAL *</label>
+        <select id="especie">
+          <option value="">Selecione...</option>
+          <option>Cão</option>
+          <option>Gato</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>RAÇA DO ANIMAL *</label>
+        <select id="raca">
+          <option value="">Selecione...</option>
+          <option>SRD (Sem Raça Definida)</option>
+          <option>Labrador</option>
+          <option>Golden Retriever</option>
+          <option>Bulldog</option>
+          <option>Poodle</option>
+          <option>Yorkshire</option>
+          <option>Outra</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>SEXO DO ANIMAL *</label>
+        <select id="sexo">
+          <option value="">Selecione...</option>
+          <option>Macho</option>
+          <option>Fêmea</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>COR DO ANIMAL *</label>
+        <select id="cor">
+          <option value="">Selecione...</option>
+          <option>Preto</option>
+          <option>Branco</option>
+          <option>Caramelo</option>
+          <option>Cinza</option>
+          <option>Mesclado</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>PORTE DO ANIMAL *</label>
+        <select id="porte">
+          <option value="">Selecione...</option>
+          <option>Pequeno</option>
+          <option>Médio</option>
+          <option>Grande</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>PELAGEM DO ANIMAL *</label>
+        <select id="pelagem">
+          <option value="">Selecione...</option>
+          <option>Curta</option>
+          <option>Média</option>
+          <option>Longa</option>
+          <option>Sem pelo</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>DATA DE NASCIMENTO DO ANIMAL *</label>
+        <input type="date" id="nascimento">
+      </div>
+      <div class="field-group">
+        <label>PERFIL DO ANIMAL *</label>
+        <select id="perfil">
+          <option value="">Selecione...</option>
+          <option>Dócil</option>
+          <option>Agressivo</option>
+          <option>Tímido</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>PROCEDÊNCIA DO ANIMAL *</label>
+        <select id="procedencia">
+          <option value="">Selecione...</option>
+          <option>Adoção</option>
+          <option>Compra</option>
+          <option>Nasceu em casa</option>
+          <option>Resgate</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>O ANIMAL JÁ É CASTRADO? *</label>
+        <select id="ja-castrado">
+          <option value="">Selecione...</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>O ANIMAL TOMOU VACINA ANTIRRÁBICA HÁ MENOS DE 1 ANO? *</label>
+        <select id="vacina">
+          <option value="">Selecione...</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Nº DO MICROCHIP <span style="color:#888; font-weight:400; text-transform:none;">(opcional)</span></label>
+        <input type="text" id="microchip">
+      </div>
+
+      <!-- ANIMAL PHOTO -->
+      <div style="color:#c00; font-weight:bold; margin: 15px 0 8px;">A foto do seu animal deve ser uma imagem (.jpg ou .jpeg) com tamanho máximo de 3mb</div>
+      <div class="file-upload-row">
+        <label class="upload-btn" for="foto-animal">Escolher arquivo</label>
+        <input type="file" id="foto-animal" accept=".jpg,.jpeg" onchange="updateFileName(this, 'foto-animal-name')">
+        <span class="no-file" id="foto-animal-name">Nenhum arquivo escolhido</span>
+        <span class="file-desc">FOTO RECENTE DO ANIMAL (ESCOLHA O MELHOR CLOSE DO SEU CÃO OU GATO. A FOTO ESCOLHIDA SERÁ USADA NO DOCUMENTO DE IDENTIFICAÇÃO DO ANIMAL).</span>
+      </div>
+      <div class="file-upload-row">
+        <label class="upload-btn" for="vacina-doc">Escolher arquivo</label>
+        <input type="file" id="vacina-doc" onchange="updateFileName(this, 'vacina-doc-name')">
+        <span class="no-file" id="vacina-doc-name">Nenhum arquivo escolhido</span>
+        <span class="file-desc">Atestado de vacinação do animal contra raiva (até 1 ano)</span>
+      </div>
+
+      <!-- PRAÇA DE ATENDIMENTO COM FILTRO POR CEP -->
+      <div class="field-group" style="margin-top:10px;" id="praca-field-group">
+        <label>SELECIONE A PRAÇA DE ATENDIMENTO ONDE DESEJA RETIRAR A PLAQUETA DE RGA *</label>
+        <div class="praca-select-wrapper">
+          <div class="praca-loading" id="praca-loading">⏳ Buscando unidades próximas ao seu CEP...</div>
+          <div class="praca-hint" id="praca-hint">Preencha o CEP acima para ver as unidades mais próximas de você.</div>
+          <div class="praca-cards" id="praca-cards"></div>
+          <!-- fallback select caso JS falhe -->
+          <select id="praca" class="praca-fallback" style="display:none;">
+            <option value="">Selecione...</option>
+          </select>
+          <input type="hidden" id="praca-selecionada" value="">
+        </div>
+      </div>
+
+      <!-- TERMS -->
+      <div class="reminder">LEMBRE-SE: mantenha sempre a plaqueta de identificação na coleira do seu animal</div>
+
+      <div style="font-weight:bold; margin: 15px 0 8px; font-size:15px;">Termos de Aceite</div>
+      <div class="terms-box">
+        <div class="term-item">
+          <p>Declaro que sou o tutor (responsável) pelo animal registrado</p>
+          <label><input type="checkbox" id="t1"> LI E ACEITO</label>
+        </div>
+        <div class="term-item">
+          <p>Declaro que as informações prestadas são verdadeiras</p>
+          <label><input type="checkbox" id="t2"> LI E ACEITO</label>
+        </div>
+        <div class="term-item">
+          <p>Estou ciente que por meio desta solicitação o animal descrito será registrado junto à indu de São Paulo, por meio do Registro Geral do Animal, cabendo a mim, como tutor deste animal (responsável), toda a responsabilidade legal, nos termos da legislação vigente.</p>
+          <label><input type="checkbox" id="t3"> LI E ACEITO</label>
+        </div>
+        <div class="term-item">
+          <p>Estou ciente que devo realizar a atualização de meus dados junto ao órgão responsável (endereço, telefone, e-mail, etc.) sempre que houver alteração dos mesmos, bem como comunicar em caso de óbito do animal e transferência de tutor, conforme previsto em legislação.</p>
+          <label><input type="checkbox" id="t4"> LI E ACEITO</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="alert('Voltar para etapa anterior')">Voltar para a etapa anterior</button>
+      <button class="btn-continue" onclick="goToCaptcha()">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: CAPTCHA -->
+<div id="page-captcha" class="page">
+  <h1>Registro Geral do Animal (RGA) - Solicitar identidade do animal</h1>
+  <div class="breadcrumb">
+    <strong>Caminho:</strong> <a href="#">Início</a> ›› <a href="#">Animais</a> ›› <a href="#">Registro de animais - RGA</a> ›› <a href="#">Registro Geral do Animal (RGA) - Solicitar identidade do animal</a>
+  </div>
+  <div class="steps">
+    <div class="step inactive">INFORMAÇÃO</div>
+    <div class="step inactive">SOLICITAÇÃO</div>
+    <div class="step active">ARQUIVOS/CAPTCHA</div>
+    <div class="step inactive">CONFIRMAÇÃO</div>
+  </div>
+
+  <div class="captcha-section">
+    <h2>Verificação de Segurança</h2>
+    <p style="font-size:13px; color:#555; margin-bottom:20px;">Digite os caracteres exibidos abaixo para confirmar que você não é um robô.</p>
+    <div class="captcha-box">
+      <div class="captcha-display" id="captcha-text"></div>
+      <br>
+      <input type="text" class="captcha-input" id="captcha-input" placeholder="Digite os caracteres acima" maxlength="6">
+      <div class="captcha-error" id="captcha-error">Código incorreto. Tente novamente.</div>
+      <br>
+      <button class="captcha-refresh" onclick="generateCaptcha()">🔄 Gerar novo código</button>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="showPage('page-form')">Voltar para a etapa anterior</button>
+      <button class="btn-continue" onclick="verifyCaptcha()">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: CONFIRMATION / CHECKOUT -->
+<div id="page-confirmation" class="page">
+  <h1>Registro Geral do Animal (RGA) - Solicitar identidade do animal</h1>
+  <div class="breadcrumb">
+    <strong>Caminho:</strong> <a href="#">Início</a> ›› <a href="#">Animais</a> ›› <a href="#">Registro de animais - RGA</a> ›› <a href="#">Registro Geral do Animal (RGA) - Solicitar identidade do animal</a>
+  </div>
+  <div class="steps">
+    <div class="step inactive">INFORMAÇÃO</div>
+    <div class="step inactive">SOLICITAÇÃO</div>
+    <div class="step inactive">ARQUIVOS/CAPTCHA</div>
+    <div class="step active">CONFIRMAÇÃO</div>
+  </div>
+
+  <div class="confirmation-section">
+    <h2>✔ Solicitação registrada com sucesso!</h2>
+    <p style="margin-bottom:15px; font-size:14px;">Sua solicitação de Registro Geral do Animal (RGA) foi recebida. Para concluir o processo, realize o pagamento da taxa abaixo via Pix.</p>
+
+    <div class="confirmation-box">
+      <p><span class="label">Protocolo:</span> <span id="protocolo-num"></span></p>
+      <p><span class="label">Nome do Tutor:</span> <span id="conf-nome"></span></p>
+      <p><span class="label">Animal:</span> <span id="conf-animal"></span></p>
+      <p><span class="label">Praça de Retirada:</span> <span id="conf-praca"></span></p>
+      <p><span class="label">Data da Solicitação:</span> <span id="conf-data"></span></p>
+    </div>
+
+    <div class="payment-section">
+      <h3>💳 Pagamento via Pix</h3>
+      <p style="margin-bottom:8px; font-size:13px;">Realize o pagamento da taxa de serviço para confirmar o registro do seu animal.</p>
+      <div class="payment-amount">Taxa: R$ 35,86</div>
+
+      <div class="qrcode-area">
+  <p id="pixStatus">Gerando pagamento...</p>
+
+  <img 
+    id="qrImg" 
+    src="" 
+    alt="QR Code Pix" 
+    style="width:220px; height:220px; object-fit:contain; display:block; margin:0 auto;"
+  >
+
+  <div style="margin-top:10px; font-size:13px; color:#c00; font-weight:bold;">
+    Expira em: <span id="timer">05:00</span>
+  </div>
+</div>
+
+      <div class="copypaste-area">
+  <label>Pix Copia e Cola:</label>
+
+  <div class="copypaste-row">
+    <input 
+  type="text" 
+  id="pixCode" 
+  value="Gerando código Pix..." 
+  readonly
+>
+
+    <button id="btnCopy" onclick="copyPix()">
+      Copiar
+    </button>
+  </div>
+
+  <div class="success-msg" id="copy-success">✔ Código copiado!</div>
+</div>
+
+      <p style="margin-top:15px; font-size:12px; color:#666;">Após o pagamento, você receberá a confirmação por e-mail. O prazo para retirada da plaqueta será informado no e-mail de confirmação.</p>
+    </div>
+
+    <p style="font-size:13px; color:#c00; font-weight:bold;">LEMBRE-SE: mantenha sempre a plaqueta de identificação na coleira do seu animal.</p>
+  </div>
+</div>
+
+<script>
+  // =============================================
+  // PRAÇAS DE ATENDIMENTO RGA - DADOS REAIS COSAP
+  // Fonte: indu de São Paulo / COSAP
+  // =============================================
+  const PRACAS = [
+    {
+      id: 'dvz-santana',
+      nome: 'DVZ – Divisão de Vigilância de Zoonoses',
+      zona: 'Zona Norte',
+      bairro: 'Santana',
+      endereco: 'Rua Santa Eulália, 86 – Santana',
+      cep: '02030-000',
+      horario: 'Seg a Sex: 9h às 17h (livre demanda, sem agendamento)',
+      livredemanda: true,
+      // prefixos de CEP da zona norte de SP
+      cepPrefixos: ['010','011','012','013','014','015','016','017','018','019','020','021','022','023','024','025','026','027','028','029','030','031','032','033','034','035','036','037','038']
+    },
+    {
+      id: 'uvis-butanta',
+      nome: 'UVIS Butantã',
+      zona: 'Zona Oeste',
+      bairro: 'Butantã',
+      endereco: 'Avenida Caxingui, 658 – Butantã',
+      cep: '05516-000',
+      horario: 'Seg a Sex: 9h às 14h (livre demanda, sem agendamento)',
+      livredemanda: true,
+      cepPrefixos: ['050','051','052','053','054','055','056','057','058','059']
+    },
+    {
+      id: 'subpref-sao-miguel',
+      nome: 'Subindu São Miguel',
+      zona: 'Zona Leste',
+      bairro: 'São Miguel Paulista',
+      endereco: 'Rua Dona Ana Flora Pinheiro de Souza, 76 – São Miguel Paulista',
+      cep: '08000-000',
+      horario: 'Seg a Sex: 9h às 16h (livre demanda, sem agendamento)',
+      livredemanda: true,
+      cepPrefixos: ['080','081','082','083','084','085','086','087','088','089']
+    },
+    {
+      id: 'subpref-vila-prudente',
+      nome: 'Subindu Vila Prudente',
+      zona: 'Zona Sudeste',
+      bairro: 'Vila Prudente',
+      endereco: 'Avenida do Oratório, 172 – Vila Prudente',
+      cep: '03220-000',
+      horario: 'Seg a Sex: 9h às 15h (livre demanda, sem agendamento)',
+      livredemanda: true,
+      cepPrefixos: ['030','031','032','033','034','035','036','037','038','039']
+    },
+    {
+      id: 'uvis-capelasocorro',
+      nome: 'UVIS Capela do Socorro',
+      zona: 'Zona Sul',
+      bairro: 'Jardim Satélite',
+      endereco: 'Rua Justino Nigro, 13 – Jardim Satélite',
+      cep: '04810-000',
+      horario: 'Seg a Sex: 8h às 16h (livre demanda, sem agendamento)',
+      livredemanda: true,
+      cepPrefixos: ['047','048','049']
+    },
+    {
+      id: 'uvis-mooca',
+      nome: 'UVIS Mooca-Aricanduva',
+      zona: 'Zona Leste',
+      bairro: 'Mooca',
+      endereco: 'Rua Taquari, 546 – Mooca',
+      cep: '03166-000',
+      horario: 'Seg a Sex: 9h às 16h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['030','031','032']
+    },
+    {
+      id: 'uvis-se',
+      nome: 'UVIS Sé',
+      zona: 'Centro',
+      bairro: 'Centro Histórico',
+      endereco: 'Rua Boa Vista, 170 – Centro',
+      cep: '01014-000',
+      horario: 'Seg a Sex: 9h às 17h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['010','011','012','013','014','015','016','017','018','019']
+    },
+    {
+      id: 'uvis-ipiranga',
+      nome: 'UVIS Ipiranga',
+      zona: 'Zona Sul',
+      bairro: 'Ipiranga',
+      endereco: 'Rua Bom Pastor, 1686 – Ipiranga',
+      cep: '04203-000',
+      horario: 'Seg a Sex: 9h às 16h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['040','041','042']
+    },
+    {
+      id: 'uvis-campolimpo',
+      nome: 'UVIS Campo Limpo',
+      zona: 'Zona Sul',
+      bairro: 'Campo Limpo',
+      endereco: 'Estrada do Campo Limpo, 1843 – Campo Limpo',
+      cep: '05778-000',
+      horario: 'Seg a Sex: 9h às 16h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['057','058']
+    },
+    {
+      id: 'uvis-penha',
+      nome: 'UVIS Penha',
+      zona: 'Zona Leste',
+      bairro: 'Penha',
+      endereco: 'Rua João Ramalho, 168 – Penha',
+      cep: '03630-000',
+      horario: 'Seg a Sex: 9h às 16h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['036','037','038']
+    },
+    {
+      id: 'uvis-saobernardo',
+      nome: 'UVIS Santo André / São Bernardo (Regional)',
+      zona: 'Zona Leste / Sul',
+      bairro: 'Sacomã',
+      endereco: 'Avenida Afonso d\'Escragnolle Taunay, 500 – Sacomã',
+      cep: '04130-000',
+      horario: 'Seg a Sex: 9h às 16h (com agendamento)',
+      livredemanda: false,
+      cepPrefixos: ['041','042','043']
+    }
+  ];
+
+  // Mapeamento zona por faixa de CEP SP (primeiros 5 dígitos)
+  // Faixas aproximadas baseadas em CEPs de SP
+  function getZonaPorCEP(cepDigits) {
+    const num = parseInt(cepDigits.substring(0, 5));
+    if (num >= 1000 && num <= 5999) return 'centro';
+    if (num >= 6000 && num <= 8999) return 'oeste';
+    if (num >= 9000 && num <= 9499) return 'norte';  // inclui Santana, Casa Verde
+    if (num >= 9500 && num <= 9999) return 'norte';
+    if (num >= 10000 && num <= 19999) return 'norte';
+    if (num >= 20000 && num <= 28999) return 'norte';
+    if (num >= 29000 && num <= 35999) return 'leste';
+    if (num >= 36000 && num <= 39999) return 'leste';
+    if (num >= 40000 && num <= 49999) return 'sul';
+    if (num >= 50000 && num <= 59999) return 'oeste';
+    if (num >= 60000 && num <= 89999) return 'leste';
+    return 'todas';
+  }
+
+  // Ordena praças por proximidade ao CEP informado
+  function ordenarPracasPorCEP(cepDigits) {
+    const num = parseInt(cepDigits);
+    
+    // Prioridade por zona baseada no CEP de SP
+    // CEPs de São Paulo: 01000-000 a 09999-999
+    let zonaPrioritaria = '';
+    
+    const p3 = parseInt(cepDigits.substring(0, 3));
+    
+    // Norte: 020xx - 029xx, 030xx alguns
+    if (p3 >= 20 && p3 <= 29) zonaPrioritaria = 'norte';
+    // Centro: 010xx - 019xx
+    else if (p3 >= 10 && p3 <= 19) zonaPrioritaria = 'centro';
+    // Leste: 030xx - 039xx (alguns), 060xx-089xx
+    else if ((p3 >= 30 && p3 <= 39) || (p3 >= 60 && p3 <= 89)) zonaPrioritaria = 'leste';
+    // Sul: 040xx - 049xx
+    else if (p3 >= 40 && p3 <= 49) zonaPrioritaria = 'sul';
+    // Oeste: 050xx - 059xx
+    else if (p3 >= 50 && p3 <= 59) zonaPrioritaria = 'oeste';
+    // Default: mostra tudo
+    else zonaPrioritaria = '';
+
+    // Ordena: mesma zona primeiro (livre demanda em destaque), depois restante
+    return [...PRACAS].sort((a, b) => {
+      const aMatch = a.zona.toLowerCase().includes(zonaPrioritaria);
+      const bMatch = b.zona.toLowerCase().includes(zonaPrioritaria);
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      // livre demanda primeiro dentro da mesma zona
+      if (aMatch && bMatch) {
+        if (a.livredemanda && !b.livredemanda) return -1;
+        if (!a.livredemanda && b.livredemanda) return 1;
+      }
+      return 0;
+    });
+  }
+
+  function renderPracas(pracasOrdenadas) {
+    const container = document.getElementById('praca-cards');
+    const hint = document.getElementById('praca-hint');
+    
+    container.innerHTML = '';
+    
+    pracasOrdenadas.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'praca-card' + (i === 0 ? ' selected' : '');
+      card.setAttribute('data-id', p.id);
+      card.setAttribute('data-nome', p.nome + ' – ' + p.endereco);
+      card.onclick = () => selecionarPraca(card);
+      
+      card.innerHTML = `
+        <div class="praca-card-zona">${p.zona}</div>
+        <div class="praca-card-name">${p.nome}</div>
+        <div class="praca-card-end">📍 ${p.endereco}</div>
+        <div class="praca-card-horario">🕐 ${p.horario}</div>
+        ${p.livredemanda ? '<div class="praca-card-dist">✅ Atendimento sem agendamento prévio</div>' : '<div style="font-size:12px;color:#888;margin-top:4px;">📅 Agendamento pelo Portal indu</div>'}
+      `;
+      
+      container.appendChild(card);
+    });
+    
+    // Seleciona automaticamente a primeira
+    if (pracasOrdenadas.length > 0) {
+      const firstCard = container.querySelector('.praca-card');
+      if (firstCard) {
+        document.getElementById('praca-selecionada').value = firstCard.getAttribute('data-nome');
+      }
+    }
+    
+    hint.style.display = 'none';
+    container.style.display = 'flex';
+  }
+
+  function selecionarPraca(card) {
+    document.querySelectorAll('.praca-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('praca-selecionada').value = card.getAttribute('data-nome');
+  }
+
+  // =============================================
+  // FILE NAME UPDATE
+  // =============================================
+  function updateFileName(input, spanId) {
+    const span = document.getElementById(spanId);
+    if (input.files && input.files[0]) {
+      span.textContent = input.files[0].name;
+      span.style.color = '#333';
+    }
+  }
+
+  // =============================================
+  // PAGE NAVIGATION
+  // =============================================
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function goToCaptcha() {
+    generateCaptcha();
+    showPage('page-captcha');
+  }
+
+  // =============================================
+  // CAPTCHA
+  // =============================================
+  let currentCaptcha = '';
+  function generateCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    currentCaptcha = '';
+    for (let i = 0; i < 6; i++) {
+      currentCaptcha += chars[Math.floor(Math.random() * chars.length)];
+    }
+    document.getElementById('captcha-text').textContent = currentCaptcha;
+    document.getElementById('captcha-input').value = '';
+    document.getElementById('captcha-error').style.display = 'none';
+  }
+
+  function verifyCaptcha() {
+  const input = document.getElementById('captcha-input').value.toUpperCase().trim();
+
+  if (input === currentCaptcha) {
+    fillConfirmation();
+    showPage('page-confirmation');
+
+    setTimeout(() => {
+      gerarPix();
+    }, 500);
+
+  } else {
+    document.getElementById('captcha-error').style.display = 'block';
+    generateCaptcha();
+  }
+}
+
+  // =============================================
+  // CONFIRMATION DATA
+  // =============================================
+  function fillConfirmation() {
+    const proto = 'RGA-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('protocolo-num').textContent = proto;
+    document.getElementById('conf-nome').textContent = document.getElementById('nome').value || '—';
+    const esp = document.getElementById('especie').value;
+    const raca = document.getElementById('raca').value;
+    document.getElementById('conf-animal').textContent = (esp && raca) ? esp + ' - ' + raca : '—';
+    document.getElementById('conf-praca').textContent = document.getElementById('praca-selecionada').value || '—';
+    document.getElementById('conf-data').textContent = new Date().toLocaleDateString('pt-BR');
+  }
+
+  // =============================================
+// PIX AUTOMÁTICO
+// =============================================
+
+window.nomeUsuario = "";
+window.cpfUsuario = "";
+window.emailUsuario = "";
+window.whatsappUsuario = "";
+window.pixTransactionId = null;
+window.checkInterval = null;
+let tempoRestante = 300;
+
+function mascaraCPF(i) {
+  let v = i.value;
+
+  if (isNaN(v[v.length - 1])) {
+    i.value = v.substring(0, v.length - 1);
+    return;
+  }
+
+  i.setAttribute("maxlength", "14");
+
+  if (v.length == 3 || v.length == 7) i.value += ".";
+  if (v.length == 11) i.value += "-";
+}
+
+document.getElementById("cpf").addEventListener("input", function () {
+  mascaraCPF(this);
+});
+
+async function copyPix() {
+  const text = document.getElementById("pixCode")?.value || "";
+  const btn = document.getElementById("btnCopy");
+  const msg = document.getElementById("copy-success");
+
+  if (!text || text.includes("Gerando")) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+
+    btn.innerHTML = "Copiado!";
+    msg.style.display = "block";
+
+    setTimeout(() => {
+      btn.innerHTML = "Copiar";
+      msg.style.display = "none";
+    }, 2500);
+
+  } catch (e) {
+    const input = document.getElementById("pixCode");
+    input.select();
+    document.execCommand("copy");
+
+    btn.innerHTML = "Copiado!";
+    msg.style.display = "block";
+
+    setTimeout(() => {
+      btn.innerHTML = "Copiar";
+      msg.style.display = "none";
+    }, 2500);
+  }
+}
+
+async function gerarPix() {
+  const pixField = document.getElementById("pixCode");
+  const qrImg = document.getElementById("qrImg");
+  const status = document.getElementById("pixStatus");
+
+  window.nomeUsuario = document.getElementById("nome").value || "USUÁRIO";
+  window.cpfUsuario = document.getElementById("cpf").value.replace(/\D/g, "") || "28818961896";
+  window.emailUsuario = document.getElementById("email").value || "joao@gmail.com";
+  window.whatsappUsuario = document.getElementById("celular").value.replace(/\D/g, "") || "11999999999";
+
+  try {
+    status.textContent = "Gerando pagamento...";
+
+    const resp = await fetch("/.netlify/functions/api-pix", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nome: window.nomeUsuario,
+        cpf: window.cpfUsuario,
+        email: window.emailUsuario,
+        whatsapp: window.whatsappUsuario,
+        valor: 35.86,
+        descricao: "Taxa de Registro Geral do Animal - RGA"
+      })
+    });
+
+    const data = await resp.json();
+
+console.log("STATUS FUNCTION:", resp.status);
+console.log("RETORNO API PIX:", data);
+
+if (!data.success) {
+  throw new Error(data.message || data.error || "Erro ao gerar Pix");
+}
+
+    console.log("RETORNO API PIX:", data);
+
+const pixCode = 
+  data?.pix_copia_cola || 
+  data?.pixCopiaCola || 
+  data?.qr_code || 
+  data?.qrcode || 
+  data?.copy_paste || 
+  "";
+
+const qrCodeBase64 = 
+  data?.qr_code_base64 || 
+  data?.qrCodeBase64 || 
+  data?.qrcode_base64 || 
+  data?.qr_code_image || 
+  data?.imagem_qrcode || 
+  "";
+
+window.pixTransactionId = 
+  data?.transaction_id || 
+  data?.transactionId || 
+  data?.id || 
+  "";
+
+pixField.value = pixCode || "Código Pix gerado";
+
+if (qrCodeBase64) {
+  qrImg.style.display = "block";
+
+  qrImg.src = qrCodeBase64.startsWith("data:image")
+    ? qrCodeBase64
+    : "data:image/png;base64," + qrCodeBase64;
+
+  status.textContent = "Aguardando pagamento";
+
+} else if (pixCode) {
+  qrImg.style.display = "block";
+
+  qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(pixCode);
+
+  status.textContent = "Aguardando pagamento";
+
+} else {
+  qrImg.style.display = "none";
+  status.textContent = "Erro ao carregar QR Code";
+}
+
+    status.textContent = "Aguardando pagamento";
+
+    iniciarTimer();
+
+    if (window.checkInterval) {
+      clearInterval(window.checkInterval);
+    }
+
+    window.checkInterval = setInterval(verificarPagamento, 5000);
+
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Erro ao gerar PIX: " + err.message;
+    pixField.value = "Erro ao gerar código Pix";
+  }
+}
+
+async function verificarPagamento() {
+  if (!window.pixTransactionId) return;
+
+  try {
+    const resp = await fetch(
+      "/.netlify/functions/verificar-pix?transactionId=" + encodeURIComponent(window.pixTransactionId)
+    );
+
+    const data = await resp.json();
+
+    if (data.pago === true) {
+      clearInterval(window.checkInterval);
+
+      const nomeFinal = encodeURIComponent(
+        document.getElementById("nome").value || window.nomeUsuario || "USUÁRIO"
+      );
+
+      window.location.href = "../comprovante?nome=" + nomeFinal;
+    }
+
+  } catch (e) {
+    console.error("Erro ao verificar pagamento:", e);
+  }
+}
+
+function iniciarTimer() {
+  tempoRestante = 300;
+
+  const timerEl = document.getElementById("timer");
+
+  const timerInterval = setInterval(() => {
+    tempoRestante--;
+
+    if (tempoRestante < 0) {
+      clearInterval(timerInterval);
+      timerEl.textContent = "00:00";
+      return;
+    }
+
+    const m = Math.floor(tempoRestante / 60);
+    const s = tempoRestante % 60;
+
+    timerEl.textContent = `${m < 10 ? "0" + m : m}:${s < 10 ? "0" + s : s}`;
+  }, 1000);
+}
+
+  // =============================================
+  // CEP FORMAT & LOOKUP (ViaCEP)
+  // =============================================
+  function formatCEP(input) {
+    let v = input.value.replace(/\D/g, '');
+    if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5,8);
+    input.value = v;
+  }
+
+  async function buscarCEP(cep) {
+    const digits = cep.replace(/\D/g, '');
+    if (digits.length !== 8) return;
+
+    const loading = document.getElementById('cep-loading');
+    const ok = document.getElementById('cep-ok');
+    const err = document.getElementById('cep-error');
+    const pracaLoading = document.getElementById('praca-loading');
+    const pracaHint = document.getElementById('praca-hint');
+    
+    loading.style.display = 'inline';
+    ok.style.display = 'none';
+    err.style.display = 'none';
+
+    // Mostra loading das praças
+    pracaHint.style.display = 'none';
+    pracaLoading.style.display = 'block';
+    document.getElementById('praca-cards').style.display = 'none';
+
+    // Clear address fields
+    ['logradouro','bairro','cidade','estado'].forEach(id => {
+      document.getElementById(id).value = '';
+      document.getElementById(id).style.background = '#f0f0f0';
+    });
+
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+      const data = await res.json();
+      loading.style.display = 'none';
+      pracaLoading.style.display = 'none';
+
+      if (data.erro) {
+        err.style.display = 'inline';
+        pracaHint.style.display = 'block';
+        pracaHint.textContent = 'CEP não encontrado. Selecione uma praça manualmente:';
+        renderPracas(PRACAS);
+        return;
+      }
+
+      ok.style.display = 'inline';
+      document.getElementById('logradouro').value = data.logradouro || '';
+      document.getElementById('bairro').value = data.bairro || '';
+      document.getElementById('cidade').value = data.localidade || '';
+      document.getElementById('estado').value = data.uf || '';
+
+      ['logradouro','bairro','cidade','estado'].forEach(id => {
+        if (document.getElementById(id).value) {
+          document.getElementById(id).style.background = '#fffde7';
+        }
+      });
+
+      document.getElementById('numero').focus();
+
+      // Filtra e ordena praças por zona do CEP
+      const pracasOrdenadas = ordenarPracasPorCEP(digits);
+      renderPracas(pracasOrdenadas);
+
+    } catch(e) {
+      loading.style.display = 'none';
+      pracaLoading.style.display = 'none';
+      err.style.display = 'inline';
+      // Mostra todas as praças no erro
+      pracaHint.style.display = 'none';
+      renderPracas(PRACAS);
+    }
+  }
+
+  // =============================================
+  // INIT
+  // =============================================
+  generateCaptcha();
+  // Mostra hint inicial
+  document.getElementById('praca-hint').style.display = 'block';
+</script>
+</body>
+</html>
 
