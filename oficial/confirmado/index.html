@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro Geral do Animal (RGA) - Solicitação Recebida</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #333; background: #fff; }
+
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .breadcrumb { font-size: 13px; padding: 10px 20px; line-height: 1.5; }
+  .breadcrumb a { color: #333; text-decoration: underline; }
+  .breadcrumb span { font-weight: bold; }
+
+  h1 { font-size: 22px; font-weight: 400; padding: 10px 20px 5px; }
+
+  /* Progress Steps */
+  .steps { display: flex; width: 100%; margin-bottom: 20px; }
+  .step { flex: 1; padding: 12px 20px; text-align: center; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
+  .step.active { background: #FFD700; color: #000; }
+  .step.done { background: #4caf50; color: #fff; }
+  .step.inactive { background: #ddd; color: #888; }
+
+  /* Container */
+  .main-container { padding: 10px 20px 40px; max-width: 1100px; }
+
+  /* STATUS HERO */
+  .status-hero {
+    border: 2px solid #FFD700;
+    background: #fffde7;
+    padding: 30px 28px 26px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+  }
+  .status-icon {
+    font-size: 52px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .status-text h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  .status-text p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.65;
+    margin-bottom: 6px;
+  }
+  .status-text p:last-child { margin-bottom: 0; }
+  .status-text strong { color: #222; }
+
+  /* PROTOCOLO BOX */
+  .protocolo-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fafafa;
+  }
+  .protocolo-box .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #FFD700;
+    padding-bottom: 6px;
+    display: inline-block;
+  }
+  .info-row {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+    font-size: 13.5px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .lbl {
+    font-weight: 700;
+    min-width: 180px;
+    color: #444;
+    flex-shrink: 0;
+  }
+  .info-row .val { color: #222; }
+  .info-row .val.proto {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    color: #333;
+    letter-spacing: 1px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 3px 10px;
+  }
+
+  /* STATUS FILA */
+  .fila-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .fila-box .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .fila-visual {
+    display: flex;
+    gap: 0;
+    margin-bottom: 18px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+  .fila-seg {
+    flex: 1;
+    height: 28px;
+    background: #eee;
+    position: relative;
+  }
+  .fila-seg.filled { background: #bbb; }
+  .fila-seg.current { background: #FFD700; }
+  .fila-seg.empty { background: #f5f5f5; }
+  .fila-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin-bottom: 14px;
+  }
+  .fila-stat {
+    background: #fafafa;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .fila-stat .num {
+    font-size: 26px;
+    font-weight: 700;
+    color: #333;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .fila-stat .num.yellow { color: #c8a000; }
+  .fila-stat .desc { font-size: 12px; color: #666; letter-spacing: 0.3px; }
+  .fila-notice {
+    background: #fff8e1;
+    border-left: 4px solid #FFD700;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .fila-notice strong { color: #222; }
+
+  /* PRÓXIMOS PASSOS */
+  .steps-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .steps-box .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .step-item:last-child { margin-bottom: 0; }
+  .step-num-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFD700;
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-item-text h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 3px;
+  }
+  .step-item-text p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .step-connector {
+    width: 2px;
+    height: 18px;
+    background: #ddd;
+    margin-left: 15px;
+    margin-bottom: 0;
+  }
+
+  /* AVISO IMPORTANTE */
+  .aviso-box {
+    border: 1px solid #c00;
+    background: #fff5f5;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #800;
+    line-height: 1.65;
+  }
+  .aviso-box strong { color: #c00; font-size: 14px; display: block; margin-bottom: 6px; }
+
+  /* CONTATO BOX */
+  .contato-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .contato-box .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+  .contato-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+  }
+  .contato-item {
+    background: #fafafa;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  .contato-item .ci-label {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .contato-item .ci-val { color: #222; font-size: 13.5px; }
+
+  /* REMINDER */
+  .reminder {
+    color: #c00;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 12px 0 4px;
+    border-top: 2px solid #FFD700;
+    margin-top: 4px;
+  }
+
+  /* PRINT BTN */
+  .print-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .btn-print {
+    background: #FFD700;
+    border: none;
+    padding: 11px 26px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+  .btn-secondary {
+    background: #f0f0f0;
+    border: 1px solid #bbb;
+    padding: 11px 22px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    h1 { font-size: 18px; padding: 12px 12px 6px; line-height: 1.35; }
+    .breadcrumb { font-size: 12px; padding: 10px 12px; }
+    .main-container { padding: 10px 12px 32px; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      padding: 0 12px;
+      margin-bottom: 16px;
+    }
+    .step { padding: 9px 6px; font-size: 11px; }
+
+    .status-hero { flex-direction: column; gap: 12px; padding: 20px 16px; }
+    .status-icon { font-size: 40px; }
+    .status-text h2 { font-size: 17px; }
+
+    .info-row { flex-direction: column; gap: 3px; }
+    .info-row .lbl { min-width: auto; }
+
+    .fila-info-grid { grid-template-columns: 1fr; }
+    .contato-grid { grid-template-columns: 1fr; }
+
+    .print-area { flex-direction: column; }
+    .btn-print, .btn-secondary { width: 100%; text-align: center; }
+  }
+
+  @media print {
+    .print-area, .btn-print, .btn-secondary { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Registro Geral do Animal (RGA) - Solicitação Recebida</h1>
+
+<div class="breadcrumb">
+  <strong>Caminho:</strong>
+  <a href="#">Início</a> ›› 
+  <a href="#">Animais</a> ›› 
+  <a href="#">Registro de animais - RGA</a> ›› 
+  <span>Aguardando disponibilidade de vaga</span>
+</div>
+
+<div class="steps">
+  <div class="step done">✔ INFORMAÇÃO</div>
+  <div class="step done">✔ SOLICITAÇÃO</div>
+  <div class="step done">✔ ARQUIVOS/CAPTCHA</div>
+  <div class="step active">CONFIRMAÇÃO</div>
+</div>
+
+<div class="main-container">
+
+  <!-- HERO STATUS -->
+  <div class="status-hero">
+    <div class="status-icon">🐾</div>
+    <div class="status-text">
+      <h2>Sua solicitação de RGA foi recebida com sucesso!</h2>
+      <p>
+        Agradecemos seu interesse no <strong>Registro Geral do Animal (RGA)</strong>. 
+        Seus dados foram registrados em nosso sistema e sua solicitação está na fila de atendimento.
+      </p>
+      <p>
+        No momento, há <strong>muitas solicitações à sua frente</strong> aguardando processamento. 
+        Assim que uma <strong>vaga for disponibilizada</strong>, a Prefeitura entrará em contato com você pelos 
+        dados informados no cadastro — <strong>não é necessário nenhuma ação adicional da sua parte.</strong>
+      </p>
+      <p>
+        Guarde o número do protocolo abaixo. Ele será necessário caso precise consultar o andamento da sua solicitação.
+      </p>
+    </div>
+  </div>
+
+  <!-- PROTOCOLO -->
+  <div class="protocolo-box">
+    <div class="section-title">📋 Dados da Solicitação</div>
+
+    <div class="info-row">
+      <span class="lbl">Número do Protocolo:</span>
+      <span class="val proto" id="proto-num">RGA-2025-––––––</span>
+    </div>
+    <div class="info-row">
+      <span class="lbl">Situação:</span>
+      <span class="val"><strong style="color:#c8a000;">⏳ Na fila — Aguardando disponibilidade de vaga</strong></span>
+    </div>
+    <div class="info-row">
+      <span class="lbl">Data da Solicitação:</span>
+      <span class="val" id="data-sol">—</span>
+    </div>
+    <div class="info-row">
+      <span class="lbl">Previsão de Contato:</span>
+      <span class="val">A Prefeitura entrará em contato <strong>em até 30 dias úteis</strong>, conforme ordem de chegada das solicitações.</span>
+    </div>
+    <div class="info-row">
+      <span class="lbl">Canal de Retorno:</span>
+      <span class="val">E-mail e/ou telefone/WhatsApp informados no cadastro.</span>
+    </div>
+  </div>
+
+  <!-- STATUS DA FILA -->
+  <div class="fila-box">
+    <div class="section-title">📊 Status da Fila de Atendimento</div>
+
+    <!-- barra visual -->
+    <div class="fila-visual" title="Representação ilustrativa da fila de espera">
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg filled"></div>
+      <div class="fila-seg current" title="Você está aqui"></div>
+      <div class="fila-seg empty"></div>
+      <div class="fila-seg empty"></div>
+      <div class="fila-seg empty"></div>
+    </div>
+
+    <div class="fila-info-grid">
+      <div class="fila-stat">
+        <span class="num">Alta</span>
+        <span class="desc">Demanda atual por RGA</span>
+      </div>
+      <div class="fila-stat">
+        <span class="num yellow">Em fila</span>
+        <span class="desc">Posição da sua solicitação</span>
+      </div>
+      <div class="fila-stat">
+        <span class="num">~30</span>
+        <span class="desc">Dias úteis para contato (estimativa)</span>
+      </div>
+    </div>
+
+    <div class="fila-notice">
+      <strong>Como funciona a fila?</strong> As solicitações são processadas em <strong>ordem cronológica de chegada</strong>. 
+      Quando uma vaga de atendimento for aberta em uma das praças de retirada da sua região, 
+      a Prefeitura enviará um <strong>aviso por e-mail e/ou telefone</strong> para que você possa confirmar e agendar a retirada da plaqueta RGA do seu animal. 
+      Não é necessário retornar a este portal para acompanhar — <strong>você será avisado automaticamente.</strong>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="steps-box">
+    <div class="section-title">🗂️ O que acontece a partir de agora</div>
+
+    <div class="step-item">
+      <div class="step-num-circle">1</div>
+      <div class="step-item-text">
+        <h4>Sua solicitação está registrada</h4>
+        <p>Todos os dados que você preencheu foram salvos com segurança no sistema da Prefeitura. Nenhuma informação foi perdida.</p>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item">
+      <div class="step-num-circle">2</div>
+      <div class="step-item-text">
+        <h4>A Prefeitura avalia a disponibilidade</h4>
+        <p>A equipe responsável analisa as vagas disponíveis nas praças de atendimento e processa as solicitações conforme a capacidade de cada unidade.</p>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item">
+      <div class="step-num-circle">3</div>
+      <div class="step-item-text">
+        <h4>Você será contatado quando houver vaga</h4>
+        <p>Assim que uma vaga for disponibilizada para o seu perfil e região, você receberá um <strong>aviso por e-mail e/ou telefone/WhatsApp</strong> com as instruções de agendamento para retirada da plaqueta RGA.</p>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item">
+      <div class="step-num-circle">4</div>
+      <div class="step-item-text">
+        <h4>Confirmação e retirada da plaqueta</h4>
+        <p>Após o contato, você confirmará o agendamento e comparecerá à praça de atendimento indicada para retirar a plaqueta de identificação RGA do seu animal.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVISO -->
+  <div class="aviso-box">
+    <strong>⚠️ Atenção — Mantenha seus dados atualizados</strong>
+    Certifique-se de que o <strong>e-mail e o telefone/WhatsApp</strong> informados no cadastro estão corretos e ativos. 
+    Caso o contato da Prefeitura não seja respondido dentro do prazo estipulado no aviso, 
+    a vaga poderá ser oferecida ao próximo solicitante da fila e você voltará à posição de espera. 
+    Para atualizar seus dados, acesse o Portal da Prefeitura com o número do protocolo acima.
+  </div>
+
+  <!-- CONTATOS DE DÚVIDAS -->
+  <div class="contato-box">
+    <div class="section-title">📞 Dúvidas sobre a sua solicitação</div>
+    <div class="contato-grid">
+      <div class="contato-item">
+        <div class="ci-label">Central de Atendimento</div>
+        <div class="ci-val">156 (Prefeitura de São Paulo)</div>
+      </div>
+      <div class="contato-item">
+        <div class="ci-label">Atendimento Presencial</div>
+        <div class="ci-val">Praças de atendimento RGA, mediante agendamento</div>
+      </div>
+      <div class="contato-item">
+        <div class="ci-label">Consulta de Protocolo</div>
+        <div class="ci-val">Portal da Prefeitura › Consultar Serviços › Número do Protocolo</div>
+      </div>
+      <div class="contato-item">
+        <div class="ci-label">Horário de Atendimento</div>
+        <div class="ci-val">Segunda a sexta-feira, das 8h às 17h</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reminder">
+    LEMBRE-SE: mantenha sempre a plaqueta de identificação na coleira do seu animal
+  </div>
+
+  <div class="print-area">
+    <button class="btn-print" onclick="window.print()">🖨️ Imprimir comprovante</button>
+    <button class="btn-secondary" onclick="copiarProtocolo()">📋 Copiar número do protocolo</button>
+    <button class="btn-secondary" onclick="window.location.href='#'">← Voltar ao início</button>
+  </div>
+
+</div>
+
+<script>
+  // Gera protocolo e data automaticamente
+  (function() {
+    const proto = 'RGA-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('proto-num').textContent = proto;
+    document.getElementById('data-sol').textContent = new Date().toLocaleDateString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+    // Salva protocolo para o botão copiar
+    window._proto = proto;
+  })();
+
+  function copiarProtocolo() {
+    const txt = window._proto || document.getElementById('proto-num').textContent;
+    const btn = document.querySelector('.print-area button:nth-child(2)');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(txt).then(() => {
+        btn.textContent = '✔ Protocolo copiado!';
+        setTimeout(() => btn.textContent = '📋 Copiar número do protocolo', 2500);
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✔ Protocolo copiado!';
+      setTimeout(() => btn.textContent = '📋 Copiar número do protocolo', 2500);
+    }
+  }
+</script>
+
+</body>
+</html>
