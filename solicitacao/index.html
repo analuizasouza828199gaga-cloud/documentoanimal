@@ -1131,7 +1131,12 @@ async function gerarPix() {
 
     const data = await resp.json();
 
-    if (!data.success) throw new Error("Erro ao gerar Pix");
+console.log("STATUS FUNCTION:", resp.status);
+console.log("RETORNO API PIX:", data);
+
+if (!data.success) {
+  throw new Error(data.message || data.error || "Erro ao gerar Pix");
+}
 
     console.log("RETORNO API PIX:", data);
 
@@ -1192,7 +1197,7 @@ if (qrCodeBase64) {
 
   } catch (err) {
     console.error(err);
-    status.textContent = "Erro ao gerar PIX";
+    status.textContent = "Erro ao gerar PIX: " + err.message;
     pixField.value = "Erro ao gerar código Pix";
   }
 }
