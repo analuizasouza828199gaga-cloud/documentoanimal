@@ -620,7 +620,7 @@ textarea {
           <label><input type="checkbox" id="t2"> LI E ACEITO</label>
         </div>
         <div class="term-item">
-          <p>Estou ciente que por meio desta solicitação o animal descrito será registrado junto à Prefeitura de São Paulo, por meio do Registro Geral do Animal, cabendo a mim, como tutor deste animal (responsável), toda a responsabilidade legal, nos termos da legislação vigente.</p>
+          <p>Estou ciente que por meio desta solicitação o animal descrito será registrado junto à indu de São Paulo, por meio do Registro Geral do Animal, cabendo a mim, como tutor deste animal (responsável), toda a responsabilidade legal, nos termos da legislação vigente.</p>
           <label><input type="checkbox" id="t3"> LI E ACEITO</label>
         </div>
         <div class="term-item">
@@ -742,7 +742,7 @@ textarea {
 <script>
   // =============================================
   // PRAÇAS DE ATENDIMENTO RGA - DADOS REAIS COSAP
-  // Fonte: Prefeitura de São Paulo / COSAP
+  // Fonte: indu de São Paulo / COSAP
   // =============================================
   const PRACAS = [
     {
@@ -770,7 +770,7 @@ textarea {
     },
     {
       id: 'subpref-sao-miguel',
-      nome: 'Subprefeitura São Miguel',
+      nome: 'Subindu São Miguel',
       zona: 'Zona Leste',
       bairro: 'São Miguel Paulista',
       endereco: 'Rua Dona Ana Flora Pinheiro de Souza, 76 – São Miguel Paulista',
@@ -781,7 +781,7 @@ textarea {
     },
     {
       id: 'subpref-vila-prudente',
-      nome: 'Subprefeitura Vila Prudente',
+      nome: 'Subindu Vila Prudente',
       zona: 'Zona Sudeste',
       bairro: 'Vila Prudente',
       endereco: 'Avenida do Oratório, 172 – Vila Prudente',
@@ -943,7 +943,7 @@ textarea {
         <div class="praca-card-name">${p.nome}</div>
         <div class="praca-card-end">📍 ${p.endereco}</div>
         <div class="praca-card-horario">🕐 ${p.horario}</div>
-        ${p.livredemanda ? '<div class="praca-card-dist">✅ Atendimento sem agendamento prévio</div>' : '<div style="font-size:12px;color:#888;margin-top:4px;">📅 Agendamento pelo Portal SP156</div>'}
+        ${p.livredemanda ? '<div class="praca-card-dist">✅ Atendimento sem agendamento prévio</div>' : '<div style="font-size:12px;color:#888;margin-top:4px;">📅 Agendamento pelo Portal indu</div>'}
       `;
       
       container.appendChild(card);
@@ -1203,22 +1203,50 @@ if (qrCodeBase64) {
 }
 
 async function verificarPagamento() {
-  if (!window.pixTransactionId) return;
+  if (!window.pixTransactionId) {
+    console.log("Sem transactionId para verificar.");
+    return;
+  }
 
   try {
+    console.log("Verificando pagamento:", window.pixTransactionId);
+
     const resp = await fetch(
       "/.netlify/functions/verificar-pix?transactionId=" + encodeURIComponent(window.pixTransactionId)
     );
 
-    const data = await resp.json();
+    const texto = await resp.text();
 
-    if (data.pago === true) {
+    console.log("STATUS VERIFICAÇÃO:", resp.status);
+    console.log("RESPOSTA VERIFICAÇÃO:", texto);
+
+    let data = {};
+
+    try {
+      data = texto ? JSON.parse(texto) : {};
+    } catch (e) {
+      console.error("Resposta da verificação não é JSON:", texto);
+      return;
+    }
+
+    const status = String(data.status || "").toLowerCase();
+
+    const pagamentoConfirmado =
+      data.pago === true ||
+      data.pago === "true" ||
+      status === "paid" ||
+      status === "approved" ||
+      status === "completed" ||
+      status === "confirmed" ||
+      status === "success" ||
+      status === "succeeded" ||
+      status === "pago" ||
+      status === "aprovado";
+
+    console.log("Pagamento confirmado?", pagamentoConfirmado, data);
+
+    if (pagamentoConfirmado) {
       clearInterval(window.checkInterval);
-
-      const nomeFinal = encodeURIComponent(
-        document.getElementById("nome").value || window.nomeUsuario || "USUÁRIO"
-      );
-
       window.location.href = "/oficial/confirmado/index.html";
     }
 
