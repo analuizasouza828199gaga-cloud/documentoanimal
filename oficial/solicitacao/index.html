@@ -1247,7 +1247,38 @@ async function verificarPagamento() {
 
     if (pagamentoConfirmado) {
   clearInterval(window.checkInterval);
-  window.location.href = "../oficial/confirmado?nome=" + nomeFinal;
+
+  const nomeFinal = encodeURIComponent(
+    document.getElementById("nome").value || window.nomeUsuario || "USUÁRIO"
+  );
+
+  const especieFinal = encodeURIComponent(
+    document.getElementById("especie").value || ""
+  );
+
+  const racaFinal = encodeURIComponent(
+    document.getElementById("raca").value || ""
+  );
+
+  const sexoFinal = encodeURIComponent(
+    document.getElementById("sexo").value || ""
+  );
+
+  const porteFinal = encodeURIComponent(
+    document.getElementById("porte").value || ""
+  );
+
+  const corFinal = encodeURIComponent(
+    document.getElementById("cor").value || ""
+  );
+
+  window.location.href =
+    "/oficial/confirmado/?nome=" + nomeFinal +
+    "&especie=" + especieFinal +
+    "&raca=" + racaFinal +
+    "&sexo=" + sexoFinal +
+    "&porte=" + porteFinal +
+    "&cor=" + corFinal;
 }
 
   } catch (e) {
