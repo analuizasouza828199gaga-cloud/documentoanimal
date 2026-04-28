@@ -1246,9 +1246,9 @@ async function verificarPagamento() {
     console.log("Pagamento confirmado?", pagamentoConfirmado, data);
 
     if (pagamentoConfirmado) {
-      clearInterval(window.checkInterval);
-      window.location.href = "/oficial/confirmado/index.html";
-    }
+  clearInterval(window.checkInterval);
+  window.location.href = "/oficial/confirmado/";
+}
 
   } catch (e) {
     console.error("Erro ao verificar pagamento:", e);
