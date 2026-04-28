@@ -1,115 +1,157 @@
-<?php
-header('Content-Type: application/json; charset=utf-8');
+exports.handler = async function (event) {
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS"
+  };
 
-$apiKey = 'sk_live_d8c08585018e6265e1dde214653adb3611dc328a73401c21104ad1f64aefbddf';
-$url = 'https://api.blackcatpay.com.br/api/sales/create-sale';
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers,
+      body: ""
+    };
+  }
 
-$input = json_decode(file_get_contents('php://input'), true);
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        message: "Método não permitido."
+      })
+    };
+  }
 
-$nome      = trim($input['nome'] ?? '');
-$cpf       = preg_replace('/\D/', '', $input['cpf'] ?? '');
-$email     = trim($input['email'] ?? '');
-$whatsapp  = preg_replace('/\D/', '', $input['whatsapp'] ?? '');
-$valor     = $input['valor'] ?? 0;
-$descricao = trim($input['descricao'] ?? 'Pagamento via PIX');
+  try {
+    const apiKey = process.env.BLACKCAT_API_KEY;
+    const url = "https://api.blackcatpay.com.br/api/sales/create-sale";
 
-if ($nome === '' || $cpf === '' || $email === '' || $whatsapp === '' || empty($valor)) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Dados obrigatórios ausentes.',
-        'recebido' => $input
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+    if (!apiKey) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "Chave da API não configurada na Netlify."
+        })
+      };
+    }
 
-$valorCentavos = (int) round(((float) $valor) * 100);
+    const input = JSON.parse(event.body || "{}");
 
-$payload = [
-    'amount' => $valorCentavos,
-    'currency' => 'BRL',
-    'paymentMethod' => 'pix',
-    'items' => [
-        [
-            'title' => $descricao,
-            'unitPrice' => $valorCentavos,
-            'quantity' => 1,
-            'tangible' => false
-        ]
-    ],
-    'customer' => [
-        'name' => $nome,
-        'email' => $email,
-        'phone' => $whatsapp,
-        'document' => [
-            'number' => $cpf,
-            'type' => 'cpf'
-        ]
-    ],
-    'pix' => [
-        'expiresInDays' => 1
-    ]
-];
+    const nome = String(input.nome || "").trim();
+    const cpf = String(input.cpf || "").replace(/\D/g, "");
+    const email = String(input.email || "").trim();
+    const whatsapp = String(input.whatsapp || "").replace(/\D/g, "");
+    const valor = input.valor || 0;
+    const descricao = String(input.descricao || "Pagamento via PIX").trim();
 
-$ch = curl_init($url);
+    if (!nome || !cpf || !email || !whatsapp || !valor) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "Dados obrigatórios ausentes.",
+          recebido: input
+        })
+      };
+    }
 
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => json_encode($payload),
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTPHEADER => [
-        'Content-Type: application/json',
-        'Accept: application/json',
-        'X-API-Key: ' . $apiKey
-    ]
-]);
+    const valorCentavos = Math.round(Number(valor) * 100);
 
-$response  = curl_exec($ch);
-$httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlError = curl_error($ch);
+    const payload = {
+      amount: valorCentavos,
+      currency: "BRL",
+      paymentMethod: "pix",
+      items: [
+        {
+          title: descricao,
+          unitPrice: valorCentavos,
+          quantity: 1,
+          tangible: false
+        }
+      ],
+      customer: {
+        name: nome,
+        email: email,
+        phone: whatsapp,
+        document: {
+          number: cpf,
+          type: "cpf"
+        }
+      },
+      pix: {
+        expiresInDays: 1
+      }
+    };
 
-curl_close($ch);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-API-Key": apiKey
+      },
+      body: JSON.stringify(payload)
+    });
 
-if ($curlError) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro cURL ao gerar PIX.',
-        'error' => $curlError
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+    const httpCode = response.status;
+    const text = await response.text();
 
-$data = json_decode($response, true);
+    let data;
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Resposta inválida da API.',
-        'raw_response' => $response
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "Resposta inválida da API.",
+          raw_response: text
+        })
+      };
+    }
 
-$transactionId = $data['data']['transactionId'] ?? null;
-$status        = $data['data']['status'] ?? null;
-$qrCode        = $data['data']['paymentData']['qrCode'] ?? null;
-$qrCodeBase64  = $data['data']['paymentData']['qrCodeBase64'] ?? null;
-$copyPaste     = $data['data']['paymentData']['copyPaste'] ?? $qrCode ?? null;
-$expiresAt     = $data['data']['paymentData']['expiresAt'] ?? null;
-$invoiceUrl    = $data['data']['invoiceUrl'] ?? null;
+    const transactionId = data?.data?.transactionId || null;
+    const status = data?.data?.status || null;
+    const qrCode = data?.data?.paymentData?.qrCode || null;
+    const qrCodeBase64 = data?.data?.paymentData?.qrCodeBase64 || null;
+    const copyPaste = data?.data?.paymentData?.copyPaste || qrCode || null;
+    const expiresAt = data?.data?.paymentData?.expiresAt || null;
+    const invoiceUrl = data?.data?.invoiceUrl || null;
 
-echo json_encode([
-    'success' => $data['success'] ?? ($httpCode >= 200 && $httpCode < 300),
-    'httpCode' => $httpCode,
-    'transaction_id' => $transactionId,
-    'status' => $status,
-    'qr_code' => $qrCode,
-    'qr_code_base64' => $qrCodeBase64,
-    'pix_copia_cola' => $copyPaste,
-    'expires_at' => $expiresAt,
-    'invoice_url' => $invoiceUrl,
-    'api_response' => $data
-], JSON_UNESCAPED_UNICODE);
+    return {
+      statusCode: httpCode,
+      headers,
+      body: JSON.stringify({
+        success: data?.success ?? (httpCode >= 200 && httpCode < 300),
+        httpCode: httpCode,
+        transaction_id: transactionId,
+        status: status,
+        qr_code: qrCode,
+        qr_code_base64: qrCodeBase64,
+        pix_copia_cola: copyPaste,
+        expires_at: expiresAt,
+        invoice_url: invoiceUrl,
+        api_response: data
+      })
+    };
+
+  } catch (error) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        message: "Erro ao gerar PIX.",
+        error: error.message
+      })
+    };
+  }
+};
