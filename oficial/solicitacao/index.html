@@ -1247,7 +1247,7 @@ async function verificarPagamento() {
 
     if (pagamentoConfirmado) {
   clearInterval(window.checkInterval);
-  window.location.href = "/oficial/confirmado/";
+  window.location.href = "../oficial/confirmado?nome=" + nomeFinal;
 }
 
   } catch (e) {
