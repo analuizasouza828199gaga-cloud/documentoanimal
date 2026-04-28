@@ -1,77 +1,122 @@
-<?php
-header('Content-Type: application/json; charset=utf-8');
+exports.handler = async function (event) {
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, OPTIONS"
+  };
 
-$apiKey = 'sk_live_d8c08585018e6265e1dde214653adb3611dc328a73401c21104ad1f64aefbddf';
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers,
+      body: ""
+    };
+  }
 
-$transactionId = trim($_GET['transactionId'] ?? $_GET['hash'] ?? '');
+  if (event.httpMethod !== "GET") {
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        message: "Método não permitido."
+      })
+    };
+  }
 
-if ($transactionId === '') {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => 'transactionId não informado.'
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+  try {
+    const apiKey = process.env.BLACKCAT_API_KEY;
 
-$url = 'https://api.blackcatpay.com.br/api/sales/' . urlencode($transactionId) . '/status';
+    if (!apiKey) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "Chave da API não configurada na Netlify."
+        })
+      };
+    }
 
-$ch = curl_init($url);
+    const params = event.queryStringParameters || {};
+    const transactionId = String(params.transactionId || params.hash || "").trim();
 
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_HTTPGET => true,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTPHEADER => [
-        'Accept: application/json',
-        'Content-Type: application/json',
-        'X-API-Key: ' . $apiKey
-    ]
-]);
+    if (!transactionId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "transactionId não informado."
+        })
+      };
+    }
 
-$response  = curl_exec($ch);
-$httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlError = curl_error($ch);
+    const url =
+      "https://api.blackcatpay.com.br/api/sales/" +
+      encodeURIComponent(transactionId) +
+      "/status";
 
-curl_close($ch);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-API-Key": apiKey
+      }
+    });
 
-if ($curlError) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro cURL ao consultar transação.',
-        'error' => $curlError
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+    const httpCode = response.status;
+    const text = await response.text();
 
-$data = json_decode($response, true);
+    let data;
 
-if (json_last_error() !== JSON_ERROR_NONE) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Resposta inválida da API.',
-        'raw_response' => $response
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "Resposta inválida da API.",
+          raw_response: text
+        })
+      };
+    }
 
-$status = strtoupper($data['data']['status'] ?? '');
+    const status = String(data?.data?.status || "").toUpperCase();
+    const pago = status === "PAID";
 
-$pago = ($status === 'PAID');
+    return {
+      statusCode: httpCode,
+      headers,
+      body: JSON.stringify({
+        success: data?.success ?? (httpCode >= 200 && httpCode < 300),
+        httpCode: httpCode,
+        transactionId: data?.data?.transactionId || transactionId,
+        status: status,
+        pago: pago,
+        paymentMethod: data?.data?.paymentMethod || null,
+        amount: data?.data?.amount || null,
+        netAmount: data?.data?.netAmount || null,
+        fees: data?.data?.fees || null,
+        paidAt: data?.data?.paidAt || null,
+        endToEndId: data?.data?.endToEndId || null,
+        api_response: data
+      })
+    };
 
-echo json_encode([
-    'success' => $data['success'] ?? ($httpCode >= 200 && $httpCode < 300),
-    'httpCode' => $httpCode,
-    'transactionId' => $data['data']['transactionId'] ?? $transactionId,
-    'status' => $status,
-    'pago' => $pago,
-    'paymentMethod' => $data['data']['paymentMethod'] ?? null,
-    'amount' => $data['data']['amount'] ?? null,
-    'netAmount' => $data['data']['netAmount'] ?? null,
-    'fees' => $data['data']['fees'] ?? null,
-    'paidAt' => $data['data']['paidAt'] ?? null,
-    'endToEndId' => $data['data']['endToEndId'] ?? null,
-    'api_response' => $data
-], JSON_UNESCAPED_UNICODE);
+  } catch (error) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        message: "Erro ao consultar transação.",
+        error: error.message
+      })
+    };
+  }
+};
